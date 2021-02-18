@@ -8,6 +8,7 @@ function rake_assets_precompile() {
   ! bundle exec 'rake -T' | grep "assets:precompile" >/dev/null && return
 
   echo "---> Starting asset compilation ..."
+  bundle config disable_exec_load true
   bundle exec rake assets:precompile
 }
 
