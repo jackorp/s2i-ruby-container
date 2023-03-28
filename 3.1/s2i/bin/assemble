@@ -65,6 +65,18 @@ if [ -f Gemfile ]; then
   # Instead please use `bundle config set --local path './bundle'`,
   # and stop using this flag
   bundle config set --local path "./bundle"
+
+  # This version of bundler does not correctly resolve the platform
+  # when taking into account Ruby version constraints.
+  # Force it to install `ruby' platform instead of any archful packages.
+  # This comes with additional burden of relying that all necessary *-devel
+  # packages are present, as the `ruby' platform compiles gems from source.
+  # See https://bugzilla.redhat.com/show_bug.cgi?id=2178171
+  # And https://github.com/sclorg/s2i-ruby-container/issues/469
+  if bundler --version | grep -q 'Bundler version 2.3.26' ; then
+    bundle config set --local force_ruby_platform true
+  fi
+
   bundle install ${ADDTL_BUNDLE_ARGS}
 
   echo "---> Cleaning up unused ruby gems ..."
